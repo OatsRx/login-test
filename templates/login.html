@@ -1,0 +1,21 @@
+  {% extends 'base.html' %}
+
+	{% block content %}
+  
+  <div class="row">
+    <form action='' method="POST" class="col s12">
+      <div class="row">
+        <div class="input-field col s6">
+          <input placeholder="Username" id="first_name" type="text" class="validate">          
+        </div>       
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="password" type="password" class="validate">
+          <label for="password">Password</label>
+        </div>
+      </div>
+      <a class="waves-effect waves-light btn" type="submit">Login</a>
+    </form>
+  </div>
+
+{% endblock %}
