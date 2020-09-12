@@ -1,7 +1,7 @@
 import os
-from flask import Flask, render_template, request, url_for, session, redirect
+from flask import Flask, render_template, request, url_for, session, redirect, flash
 from flask_pymongo import PyMongo
-import bcrypt 
+import bcrypt
 if os.path.exists('env.py'):
     import env
 
@@ -13,19 +13,31 @@ mongo = PyMongo(app)
 
 
 @app.route('/')
-@app.route('/home')
-def home():
-    if 'username' in session:
-        return 'Logged in as ' + session['username']
-
+def index():
     return render_template('home.html')
 
 
-@app.route('/login')
+@app.route('/logged_in')
+def logged_in():
+    if 'username' in session:
+        return render_template('loggedin.html')
+
+
+#################################LOGIN#################################
+
+@app.route('/login', methods=['POST'])
 def login():
-    return render_template('login.html')
+    users = mongo.db.users
+    login_user = users.find_one({'name': request.form['username']})
 
+    if login_user:
+        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']).encode('utf-8') == login_user['password'].encode('utf-8'):
+            session['username'] = request.form['username']
+            return redirect(url_for('logged_in'))
 
+    return 'Incorrct Username/Password'
+
+#################################REGISTER#################################
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
@@ -35,12 +47,12 @@ def register():
         if existing_user is None:
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             users.insert({'name' : request.form['username'], 'password' : hashpass})
-            session ['username'] = request.form['username']
-            return redirect(url_for('home'))
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
 
-        return 'That username already exists!'
+        return render_template('userexists.html')
 
-    return render_template('register.html')
+    return render_template('loggedin.html')
 
 
 if __name__ == '__main__':

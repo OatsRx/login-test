@@ -2,11 +2,11 @@
 
 	{% block content %}
   
-  <div class="row">
-    <form action='' method="POST" class="col s12">
+  <div class="row">    
+    <form action="{{url_for('login')}}"  method="POST" class="col s12">
       <div class="row">
         <div class="input-field col s6">
-          <input placeholder="Username" id="first_name" type="text" class="validate">          
+          <input placeholder="Username" id="username" type="text" class="validate">          
         </div>       
       <div class="row">
         <div class="input-field col s6">
@@ -14,10 +14,10 @@
           <label for="password">Password</label>
         </div>
       </div>
-      <a class="waves-effect waves-light btn" type="submit">Login</a>
-      <p>Haven't got an account?</p>
-      <a href="{{url_for('register')}}"><p>Register here!</p></a>
+      <a href="{{url_for('login')}}" class="waves-effect waves-light btn" type="submit">Login</a>            
     </form>
+    <p>Haven't got an account?</p>
+    <a href="{{url_for('register')}}"><p>Register here!</p></a>
   </div>
 
 {% endblock %}
